@@ -230,7 +230,7 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         let cancelButtonAttributes = [NSAttributedString.Key.font: UIFont(name: "Avenir-Book", size: 17) as Any,
                                       NSAttributedString.Key.kern: -0.0241 * 17]
         cancelButton.setTitleTextAttributes(cancelButtonAttributes, for: .normal)
-        cancelButton.setTitleTextAttributes(cancelButtonAttributes, for: .selected)
+        cancelButton.setTitleTextAttributes(cancelButtonAttributes, for: .highlighted)
         cancelButton.setTitleTextAttributes(cancelButtonAttributes, for: .disabled)
         cancelButton.tintColor = UIColor(hex: "#8E8E93FF")
         
@@ -246,7 +246,7 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
                                         NSAttributedString.Key.kern: -0.0241 * 17]
             
             nextButton.setTitleTextAttributes(nextButtonAttributes, for: .normal)
-            nextButton.setTitleTextAttributes(nextButtonAttributes, for: .selected)
+            nextButton.setTitleTextAttributes(nextButtonAttributes, for: .highlighted)
             nextButton.setTitleTextAttributes(nextButtonAttributes, for: .disabled)
 
             navigationItem.rightBarButtonItem = nextButton
