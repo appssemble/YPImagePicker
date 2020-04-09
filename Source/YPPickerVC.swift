@@ -256,12 +256,10 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
             navigationItem.rightBarButtonItem?.isEnabled = libraryVC!.selection.count >= YPConfig.library.minNumberOfItems
 
         case .camera:
-            navigationItem.titleView = nil
-            title = cameraVC?.title
+            setTitleViewWithTitle(aTitle: "NEW PLACE")
             navigationItem.rightBarButtonItem = nil
         case .video:
-            navigationItem.titleView = nil
-            title = videoVC?.title
+            setTitleViewWithTitle(aTitle: "NEW PLACE")
             navigationItem.rightBarButtonItem = nil
         }
     }
