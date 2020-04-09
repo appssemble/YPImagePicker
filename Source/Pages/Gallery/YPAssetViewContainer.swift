@@ -14,10 +14,8 @@ import AVFoundation
 /// The container for asset (video or image). It containts the YPGridView and YPAssetZoomableView.
 class YPAssetViewContainer: UIView {
     public var zoomableView: YPAssetZoomableView?
-    public let grid = YPGridView()
     public let curtain = UIView()
     public let spinnerView = UIView()
-    public let squareCropButton = UIButton()
     public let multipleSelectionButton = UIButton()
     public var onlySquare = YPConfig.library.onlySquare
     public var isShown = true
@@ -29,8 +27,6 @@ class YPAssetViewContainer: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        addSubview(grid)
-        grid.frame = frame
         clipsToBounds = true
         
         for sv in subviews {
@@ -39,8 +35,6 @@ class YPAssetViewContainer: UIView {
                 zoomableView?.myDelegate = self
             }
         }
-        
-        grid.alpha = 0
         
         let touchDownGR = UILongPressGestureRecognizer(target: self,
                                                        action: #selector(handleTouchDown))
@@ -66,15 +60,6 @@ class YPAssetViewContainer: UIView {
         curtain.backgroundColor = UIColor.ypLabel.withAlphaComponent(0.7)
         curtain.alpha = 0
         
-        if !onlySquare {
-            // Crop Button
-            squareCropButton.setImage(YPConfig.icons.cropIcon, for: .normal)
-            sv(squareCropButton)
-            squareCropButton.size(42)
-            |-15-squareCropButton
-            squareCropButton.Bottom == zoomableView!.Bottom - 15
-        }
-        
         // Multiple selection button
         sv(multipleSelectionButton)
         multipleSelectionButton.size(42)
@@ -96,15 +81,6 @@ class YPAssetViewContainer: UIView {
     
     
     public func refreshSquareCropButton() {
-        if onlySquare {
-            squareCropButton.isHidden = true
-        } else {
-            if let image = zoomableView?.assetImageView.image {
-                let isImageASquare = image.size.width == image.size.height
-                squareCropButton.isHidden = isImageASquare
-            }
-        }
-        
         let shouldFit = YPConfig.library.onlySquare ? true : shouldCropToSquare
         zoomableView?.fitImage(shouldFit)
     }
@@ -123,12 +99,6 @@ class YPAssetViewContainer: UIView {
 // MARK: - ZoomableViewDelegate
 extension YPAssetViewContainer: YPAssetZoomableViewDelegate {
     public func ypAssetZoomableViewDidLayoutSubviews(_ zoomableView: YPAssetZoomableView) {
-        let newFrame = zoomableView.assetImageView.convert(zoomableView.assetImageView.bounds, to: self)
-        
-        // update grid position
-        grid.frame = frame.intersection(newFrame)
-        grid.layoutIfNeeded()
-        
         // Update play imageView position - bringing the playImageView from the videoView to assetViewContainer,
         // but the controll for appearing it still in videoView.
         if zoomableView.videoView.playImageView.isDescendant(of: self) == false {
@@ -138,17 +108,9 @@ extension YPAssetViewContainer: YPAssetZoomableViewDelegate {
     }
     
     public func ypAssetZoomableViewScrollViewDidZoom() {
-        if isShown {
-            UIView.animate(withDuration: 0.1) {
-                self.grid.alpha = 1
-            }
-        }
     }
     
     public func ypAssetZoomableViewScrollViewDidEndZooming() {
-        UIView.animate(withDuration: 0.3) {
-            self.grid.alpha = 0
-        }
     }
 }
 
@@ -165,18 +127,5 @@ extension YPAssetViewContainer: UIGestureRecognizerDelegate {
     
     @objc
     private func handleTouchDown(sender: UILongPressGestureRecognizer) {
-        switch sender.state {
-        case .began:
-            if isShown {
-                UIView.animate(withDuration: 0.1) {
-                    self.grid.alpha = 1
-                }
-            }
-        case .ended:
-            UIView.animate(withDuration: 0.3) {
-                self.grid.alpha = 0
-            }
-        default: ()
-        }
     }
 }

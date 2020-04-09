@@ -215,7 +215,7 @@ extension YPLibraryVC: UICollectionViewDelegateFlowLayout {
                                sizeForItemAt indexPath: IndexPath) -> CGSize {
         let margins = YPConfig.library.spacingBetweenItems * CGFloat(YPConfig.library.numberOfItemsInRow - 1)
         let width = (collectionView.frame.width - margins) / CGFloat(YPConfig.library.numberOfItemsInRow)
-        return CGSize(width: width, height: width)
+        return CGSize(width: width, height: width - 11)
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

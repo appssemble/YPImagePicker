@@ -67,8 +67,18 @@ open class YPBottomPager: UIViewController, UIScrollViewDelegate {
         
         // Build headers
         for (index, c) in controllers.enumerated() {
+            let title = c.title?.capitalized ?? ""
             let menuItem = YPMenuItem()
-            menuItem.textLabel.text = c.title?.capitalized
+            if index == 0 {
+                menuItem.textLabel.textAlignment = .left
+            } else if index == controllers.count - 1 {
+                menuItem.textLabel.textAlignment = .right
+            }
+            
+            let labelAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white,
+                                   NSAttributedString.Key.font: UIFont(name: "AvenirNext-Medium", size: 16) as Any,
+                                   NSAttributedString.Key.kern: -0.00615 * 16]
+            menuItem.textLabel.attributedText = NSAttributedString(string: title, attributes: labelAttributes)
             menuItem.button.tag = index
             menuItem.button.addTarget(self,
                                       action: #selector(tabTapped(_:)),

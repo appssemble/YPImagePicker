@@ -37,7 +37,7 @@ final class YPMenuItem: UIView {
         )
         
         textLabel.centerInContainer()
-        |-(10)-textLabel-(10)-|
+        |-(17)-textLabel-(17)-|
         button.fillContainer()
         
         textLabel.style { l in

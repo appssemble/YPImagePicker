@@ -207,76 +207,50 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
     }
     
     func setTitleViewWithTitle(aTitle: String) {
-        let titleView = UIView()
-        titleView.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
-        
         let label = UILabel()
-        label.text = aTitle
-        // Use standard font by default.
-        label.font = UIFont.boldSystemFont(ofSize: 17)
-        
-        // Use custom font if set by user.
-        if let navBarTitleFont = UINavigationBar.appearance().titleTextAttributes?[.font] as? UIFont {
-            // Use custom font if set by user.
-            label.font = navBarTitleFont
-        }
-        // Use custom textColor if set by user.
-        if let navBarTitleColor = UINavigationBar.appearance().titleTextAttributes?[.foregroundColor] as? UIColor {
-            label.textColor = navBarTitleColor
-        }
-        
-        if YPConfig.library.options != nil {
-            titleView.sv(
-                label
-            )
-            |-(>=8)-label.centerHorizontally()-(>=8)-|
-            align(horizontally: label)
+        // Use custom attributes if set by user.
+        if let titleTextAttributes = UINavigationBar.appearance().titleTextAttributes {
+            label.attributedText = NSAttributedString(string: aTitle, attributes: titleTextAttributes)
         } else {
-            let arrow = UIImageView()
-            arrow.image = YPConfig.icons.arrowDownIcon
-            arrow.image = arrow.image?.withRenderingMode(.alwaysTemplate)
-            arrow.tintColor = .ypLabel
-            
-            let attributes = UINavigationBar.appearance().titleTextAttributes
-            if let attributes = attributes, let foregroundColor = attributes[.foregroundColor] as? UIColor {
-                arrow.image = arrow.image?.withRenderingMode(.alwaysTemplate)
-                arrow.tintColor = foregroundColor
-            }
-            
-            let button = UIButton()
-            button.addTarget(self, action: #selector(navBarTapped), for: .touchUpInside)
-            button.setBackgroundColor(UIColor.white.withAlphaComponent(0.5), forState: .highlighted)
-            
-            titleView.sv(
-                label,
-                arrow,
-                button
-            )
-            button.fillContainer()
-            |-(>=8)-label.centerHorizontally()-arrow-(>=8)-|
-            align(horizontally: label-arrow)
+            label.text = aTitle
+            // Use standard font by default.
+            label.font = UIFont.boldSystemFont(ofSize: 17)
         }
         
-        label.firstBaselineAnchor.constraint(equalTo: titleView.bottomAnchor, constant: -14).isActive = true
-        
-        titleView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        navigationItem.titleView = titleView
+        navigationItem.titleView = label
     }
     
     func updateUI() {
         // Update Nav Bar state.
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: YPConfig.wordings.cancel,
-                                                           style: .plain,
-                                                           target: self,
-                                                           action: #selector(close))
+        let cancelButton = UIBarButtonItem(title: YPConfig.wordings.cancel,
+                                           style: .plain,
+                                           target: self,
+                                           action: #selector(close))
+        
+        let cancelButtonAttributes = [NSAttributedString.Key.font: UIFont(name: "Avenir-Book", size: 17) as Any,
+                                      NSAttributedString.Key.kern: -0.0241 * 17]
+        cancelButton.setTitleTextAttributes(cancelButtonAttributes, for: .normal)
+        cancelButton.setTitleTextAttributes(cancelButtonAttributes, for: .selected)
+        cancelButton.setTitleTextAttributes(cancelButtonAttributes, for: .disabled)
+        cancelButton.tintColor = UIColor(hex: "#8E8E93FF")
+        
+        navigationItem.leftBarButtonItem = cancelButton
         switch mode {
         case .library:
-            setTitleViewWithTitle(aTitle: libraryVC?.title ?? "")
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: YPConfig.wordings.next,
-                                                                style: .done,
-                                                                target: self,
-                                                                action: #selector(done))
-            navigationItem.rightBarButtonItem?.tintColor = YPConfig.colors.tintColor
+            setTitleViewWithTitle(aTitle: "NEW PLACE")
+            let nextButton = UIBarButtonItem(title: YPConfig.wordings.next,
+                                             style: .done,
+                                             target: self,
+                                             action: #selector(done))
+            let nextButtonAttributes = [NSAttributedString.Key.font: UIFont(name: "Avenir-BookOblique", size: 17) as Any,
+                                        NSAttributedString.Key.kern: -0.0241 * 17]
+            
+            nextButton.setTitleTextAttributes(nextButtonAttributes, for: .normal)
+            nextButton.setTitleTextAttributes(nextButtonAttributes, for: .selected)
+            nextButton.setTitleTextAttributes(nextButtonAttributes, for: .disabled)
+
+            navigationItem.rightBarButtonItem = nextButton
+            navigationItem.rightBarButtonItem?.tintColor = UIColor.white.withAlphaComponent(0.9)
             
             // Disable Next Button until minNumberOfItems is reached.
             navigationItem.rightBarButtonItem?.isEnabled = libraryVC!.selection.count >= YPConfig.library.minNumberOfItems

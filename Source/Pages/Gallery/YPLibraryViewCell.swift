@@ -104,6 +104,6 @@ class YPLibraryViewCell: UICollectionViewCell {
     
     private func refreshSelection() {
         let showOverlay = isSelected || isHighlighted
-        selectionOverlay.alpha = showOverlay ? 0.6 : 0
+        selectionOverlay.alpha = showOverlay ? 0.2 : 0
     }
 }

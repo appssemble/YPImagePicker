@@ -37,7 +37,7 @@ final class YPLibraryView: UIView {
             |line| ~ 1
         )
         
-        line.backgroundColor = .ypSystemBackground
+        line.backgroundColor = UIColor(hex: "#0E0F0FFF")
         
         setupMaxNumberOfItemsView()
         setupProgressBarView()
@@ -100,7 +100,6 @@ extension YPLibraryView {
     // MARK: - Grid
     
     func hideGrid() {
-        assetViewContainer.grid.alpha = 0
     }
     
     // MARK: - Loader and progress
@@ -158,6 +157,6 @@ extension YPLibraryView {
     
     func cellSize() -> CGSize {
         let size = UIScreen.main.bounds.width/4 * UIScreen.main.scale
-        return CGSize(width: size, height: size)
+        return CGSize(width: size, height: size - 11)
     }
 }
