@@ -233,10 +233,20 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
     // Async beacause will prompt permission if .notDetermined
     // and ask custom popup if denied.
     func checkPermissionToAccessPhotoLibrary(block: @escaping (Bool) -> Void) {
+        let bundle = Bundle(for: YPPickerVC.self)
+        var deniedView: UIView?
+        if let permissionDeniedView = UINib(nibName: "PermissionDeniedView", bundle: bundle).instantiate(withOwner: nil, options: nil)[0] as? UIView {
+            print("permissionDeniedView all good!")
+            permissionDeniedView.frame = view.frame
+            deniedView = permissionDeniedView
+            view.addSubview(permissionDeniedView)
+        }
+        
         // Only intilialize picker if photo permission is Allowed by user.
         let status = PHPhotoLibrary.authorizationStatus()
         switch status {
         case .authorized:
+            deniedView?.removeFromSuperview()
             block(true)
         case .restricted, .denied:
             let popup = YPPermissionDeniedPopup()
@@ -248,6 +258,10 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
             // Show permission popup and get new status
             PHPhotoLibrary.requestAuthorization { s in
                 DispatchQueue.main.async {
+                    if s == .authorized {
+                        deniedView?.removeFromSuperview()
+                    }
+                    
                     block(s == .authorized)
                 }
             }
